@@ -1,0 +1,10 @@
+.heroItems {
+  display: flex;
+  max-height: 100%;
+  flex-direction: column;
+}
+.heroItem {
+  width: 30%;
+  color: cyan;
+  text-decoration: none;
+}

@@ -1,6 +1,8 @@
 enum Routes {
   dashboard = "/",
   chess = "/chess",
+  dota = "/dota",
+  dotaHero = "/dota/hero/",
 }
 
 const sidebarRoutes = [
@@ -13,6 +15,11 @@ const sidebarRoutes = [
     id: 2,
     label: "Chess",
     url: Routes.chess,
+  },
+  {
+    id: 3,
+    label: "Dota",
+    url: Routes.dota,
   },
 ];
 

@@ -1,18 +1,11 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
-
+import { Box, Typography } from "@mui/material";
+import './Layout.css'
 const Layout: React.FC = () => {
-  const [state, setState] = useState(0);
 
-  const handleClick = () => {
-    setState(prev => prev + 1)
-  }
 
   return (
-    <Box>
+    <Box className='wrapperLayout'>
       <Typography>DASHBOARD</Typography>
-      <Typography>{state}</Typography>
-      <Button onClick={handleClick}>+1</Button>
     </Box>
   )
 };

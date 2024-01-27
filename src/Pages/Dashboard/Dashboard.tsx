@@ -1,9 +1,9 @@
 import React from "react";
-import Layout from "../../Components/Chess/Layout";
+import Layout from "../../Components/Dashboard/Layout";
 import ContentWrapper from "../../Components/Shared/ContentWrapper";
 
 const Dashboard: React.FC = (): JSX.Element => (
-  <ContentWrapper>
+  <ContentWrapper breadCrumbs="Dashboard">
     <Layout />
   </ContentWrapper>
 );
