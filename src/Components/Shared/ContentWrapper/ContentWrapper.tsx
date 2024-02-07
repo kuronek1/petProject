@@ -1,38 +1,97 @@
-import { Box } from "@mui/material"
-import { Link, useLocation } from "react-router-dom";
+import { Box } from '@mui/material';
+import { Link, useLocation } from 'react-router-dom';
 
-
-import { Routes, sidebarRoutes } from "../../../constants/routes";
-import './ContentWrapperStyles.css';
+import { Routes, sidebarRoutes } from '../../../constants/routes';
 
 interface IProps {
-  children?: React.ReactNode
-  breadCrumbs: string
+	children?: React.ReactNode;
+	breadCrumbs: string;
 }
 
 const ContentWrapper: React.FC<IProps> = (props): JSX.Element => {
-  const { children, breadCrumbs } = props;
+	const { children, breadCrumbs } = props;
+	const { pathname } = useLocation();
 
-  const { pathname } = useLocation();
-
-  return (
-    <Box className="wrapper">
-      <Box className='sidebar'>
-        <Box className='sidebarItem'>
-          <Link className="route" to={Routes.dashboard} >+ LOGO +</Link>
-        </Box>
-        {sidebarRoutes.map((item) => (
-          <Box key={item.id} className='sidebarItem'>
-            <Link className={pathname === item.url ? 'activeRoute' : 'route'} to={item.url} key={item.id}>{item.label}</Link>
-          </Box>
-        ))}
-      </Box>
-      <Box className='contentWrapper'>
-        <Box className='header'>{breadCrumbs}</Box>
-        <Box className='children'>{children}</Box>
-      </Box>
-    </Box>
-  )
+	return (
+		<Box
+			sx={{
+				display: 'flex',
+				bgcolor: 'black',
+				color: 'aqua',
+				minHeight: '100vh',
+				minWidth: '100rem'
+			}}
+		>
+			<Box
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					bgcolor: '#44195e',
+					width: '10rem',
+					color: 'white',
+					minHeight: '100%'
+				}}
+			>
+				<Box
+					sx={{
+						padding: '1rem 2rem'
+					}}
+				>
+					<Link style={{ textDecoration: 'none', color: 'white' }} to={Routes.dashboard}>
+						+ LOGO +
+					</Link>
+				</Box>
+				{sidebarRoutes.map(item => (
+					<Box key={item.id} sx={{ padding: '1rem 2rem' }}>
+						<Link
+							to={item.url}
+							style={{
+								textDecoration: 'none',
+								color: pathname === item.url ? 'yellow' : 'white',
+								fontSize: 'large',
+								fontWeight: 600
+							}}
+						>
+							{item.label}
+						</Link>
+					</Box>
+				))}
+			</Box>
+			<Box
+				sx={{
+					width: '100%',
+					height: '100%',
+					display: 'flex',
+					flexDirection: 'column'
+				}}
+			>
+				<Box
+					sx={{
+						height: '5vh',
+						bgcolor: '#feea01',
+						display: 'flex',
+						alignItems: 'center',
+						paddingLeft: '2rem',
+						color: 'black',
+						fontSize: 'large',
+						fontWeight: 700
+					}}
+				>
+					{breadCrumbs}
+				</Box>
+				<Box
+					sx={{
+						padding: '2rem',
+						height: '100%',
+						width: '100%',
+						maxHeight: '95vh'
+					}}
+				>
+					{children}
+				</Box>
+			</Box>
+		</Box>
+	);
 };
 
 export default ContentWrapper;

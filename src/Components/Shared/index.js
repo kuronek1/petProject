@@ -1,3 +1,3 @@
 import ContentWrapper from "./ContentWrapper";
-
-export { ContentWrapper };
+import Status from "./Status";
+export { ContentWrapper, Status };

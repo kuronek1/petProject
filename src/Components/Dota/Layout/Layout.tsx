@@ -1,44 +1,56 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
-import { getDotaHeroes } from "../../../store/dota/sagaActions";
-import { dotaHeroes } from "../../../store/dota/selectors";
-import { DotaHero } from "../../../store/dota/types";
-import { Link } from "react-router-dom";
-import { Routes } from "../../../constants/routes";
+import { useEffect, useState } from 'react';
+import { Box, Button } from '@mui/material';
 
-import './styles.css'
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { getDotaHeroes } from '../../../store/dota/sagaActions';
+import { dotaHeroes } from '../../../store/dota/selectors';
+import { Routes } from '../../../constants/routes';
+import { DotaHero } from '../../../store/dota/types';
+import { API_DOTA_IMAGES } from '../../../constants/api';
+import './styles.css';
+import LinkIconButton from '../../Shared/LinkIconButton';
 
 const Layout: React.FC = () => {
-  const [state, setState] = useState(0);
-  const dispatch = useAppDispatch();
-  const heroes = useAppSelector(dotaHeroes)
-  const handleClick = () => {
-    setState(prev => prev + 1)
-  }
+	const [state, setState] = useState(0);
+	const dispatch = useAppDispatch();
+	const heroes = useAppSelector(dotaHeroes);
 
-  useEffect(() => {
-    if (state === 1) {
-      dispatch(getDotaHeroes({}))
+	const handleClick = () => {
+		setState(prev => prev + 1);
+	};
 
-    }
-  }, [state])
+	useEffect(() => {
+		if (state === 1) {
+			dispatch(getDotaHeroes());
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state]);
 
-  return (
-    <Box>
-      <Typography>DOTA 2 PAGE</Typography>
-      <Typography>{state}</Typography>
-      <Button onClick={handleClick}>+1</Button>
-      <Box className='heroItems'>
-        {heroes.map((item: DotaHero) => (
-          <Box key={item.id}>
-            <Link className="heroItem" to={`${Routes.dotaHero}${item.id}`}>{item.localized_name}</Link>
-            <br />
-          </Box>
-        ))}
-      </Box>
-    </Box >
-  )
+	return (
+		<Box className='wrapperLayout'>
+			<Button onClick={handleClick}>DOTA 2 PAGE</Button>
+			<Box className='heroItems'>
+				{heroes.map((item: DotaHero) => (
+					<Box
+						key={item.id}
+						sx={{
+							minWidth: '15%',
+							maxWidth: '15%',
+							flexGrow: 1,
+							color: 'cyan',
+							textDecoration: 'none'
+						}}
+					>
+						<LinkIconButton
+							name={item.localized_name}
+							icon={`${API_DOTA_IMAGES}${item.img}`}
+							url={`${Routes.dotaHero}/${item.id}/${item.localized_name}`}
+						/>
+					</Box>
+				))}
+			</Box>
+		</Box>
+	);
 };
 
 export default Layout;

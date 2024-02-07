@@ -1,10 +1,10 @@
-import { DotaHeroesFilters } from "../../constants/types/filters";
-import dotaApi from "../api";
-import { AxiosResponse } from "axios";
+import dotaApi from '../api';
+import { AxiosResponse } from 'axios';
 
 const dota = {
-  getHeroes: async (filters: DotaHeroesFilters): Promise<AxiosResponse<any>> =>
-    dotaApi.get("/heroes", { params: filters }),
+	getHeroes: async (): Promise<AxiosResponse<any>> => dotaApi.get('/heroStats'),
+	getHeroLastMatches: async (hero_id: number): Promise<AxiosResponse<any>> =>
+		dotaApi.get(`/heroes/${hero_id}/matches`)
 };
 
 export default dota;
