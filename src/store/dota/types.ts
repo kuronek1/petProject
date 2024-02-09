@@ -6,7 +6,8 @@ export enum DotaTypes {
 export interface InitialState {
 	dotaLoading: boolean;
 	dotaHeroes: DotaHero[];
-	dotaHero: DotaHeroLastMatch[];
+	dotaHero: DotaHero;
+	dotaHeroMatches: DotaHeroLastMatch[];
 }
 
 export interface DotaHero {

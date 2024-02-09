@@ -1,53 +1,179 @@
-import { useEffect, useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { useEffect } from 'react';
+import { Box, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
-import { getDotaHeroLastMatches } from "../../../store/dota/sagaActions";
-import { dotaHero } from "../../../store/dota/selectors";
-import { DotaHeroLastMatch } from "../../../store/dota/types";
-
-import './styles.css'
-import { useParams } from "react-router-dom";
-import moment from "moment";
-import { Status } from "../../Shared";
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { Spinner, TextInfo } from '../../Shared';
+import { getDotaHeroLastMatches, getDotaHeroes } from '../../../store/dota/sagaActions';
+import { dotaHeroMatches, dotaHeroes, dotaLoading } from '../../../store/dota/selectors';
+import { API_DOTA_IMAGES } from '../../../constants/api';
+import { DotaHeroLastMatch } from '../../../store/dota/types';
+import StatisticItem from './StatisticItem';
 
 const Layout: React.FC = () => {
-  const [state, setState] = useState(0);
+	const { id } = useParams<{ id: string }>();
 
-  const { id, name } = useParams<{ id: string, name: string }>();
+	const dispatch = useAppDispatch();
+	const heroes = useAppSelector(dotaHeroes);
+	const heroData = useAppSelector(dotaHeroMatches);
+	const loading = useAppSelector(dotaLoading);
 
-  const dispatch = useAppDispatch();
-  const heroData = useAppSelector(dotaHero)
+	const selectedHero = id ? heroes.find(hero => hero.id === +id) : undefined;
 
-  const handleClick = () => {
-    setState(prev => prev + 1)
-  }
-  console.log(id)
-  useEffect(() => {
-    if (state === 1 && id) {
-      dispatch(getDotaHeroLastMatches(+id))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state])
+	useEffect(() => {
+		if (selectedHero && id) {
+			dispatch(getDotaHeroLastMatches(+id));
+		}
+	}, [dispatch, id, selectedHero]);
 
-  return (
-    <Box className='wrapperLayout'>
-      <Button onClick={handleClick}>DOTA 2 HERO PAGE</Button>
-      <Box>{name}</Box>
-      <Box className='heroItems'>
-        {heroData.map((item: DotaHeroLastMatch) => (
-          <Box key={item.match_id} className="heroItem">
-            <Typography>K/D/A:{`${item.kills}/${item.deaths}/${item.assists}`}</Typography>
-            <Typography>Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</Typography>
-            <Typography>League name: {item.league_name}</Typography>
-            <Typography>Team: {item.radiant ? 'Radiant' : 'Dire'}</Typography>
-            <Typography>Victory: {item.radiant_win ? 'Radiant' : 'Dire'}</Typography>
-            <Status name='123' />
-          </Box>
-        ))}
-      </Box>
-    </Box >
-  )
+	useEffect(() => {
+		if (!heroes.length) {
+			dispatch(getDotaHeroes());
+		}
+	}, [dispatch, heroes]);
+
+	return (
+		<>
+			{loading && <Spinner />}
+			<Box sx={{ padding: '0.5rem', backgroundColor: 'rgb(17, 17, 17)', minWidth: '60rem' }}>
+				<Box
+					sx={{
+						display: 'flex',
+						minHeight: '48.4rem',
+						maxHeight: '100%',
+						flexWrap: 'wrap'
+					}}
+				>
+					{selectedHero && (
+						<Box
+							sx={{
+								display: 'flex',
+								width: '100%',
+								justifyContent: 'space-around',
+								marginBottom: '2rem',
+								height: '10rem'
+							}}
+						>
+							<Box sx={{ display: 'flex' }}>
+								<img
+									src={`${API_DOTA_IMAGES}${selectedHero.img}`}
+									alt={`${selectedHero.localized_name}`}
+									style={{
+										width: '15rem',
+										height: '10rem',
+										borderRadius: '25px',
+										marginRight: '1rem'
+									}}
+								/>
+								<Box>
+									<Typography sx={{ marginBottom: '1rem' }}>
+										{selectedHero.localized_name}
+									</Typography>
+									<Typography sx={{ marginBottom: '1rem' }}>
+										{selectedHero.attack_type} - {selectedHero.roles.join(', ')}
+									</Typography>
+									<Box sx={{ display: 'flex' }}>
+										<Typography>
+											<span
+												style={{
+													content: '""',
+													width: '10px',
+													height: '10px',
+													backgroundColor: 'red',
+													borderRadius: '50%',
+													display: 'inline-block',
+													margin: '0 5px 0 0'
+												}}
+											/>
+											{selectedHero.base_str} + {selectedHero.str_gain}
+										</Typography>
+										<Typography>
+											{' '}
+											<span
+												style={{
+													content: '""',
+													width: '10px',
+													height: '10px',
+													backgroundColor: 'green',
+													borderRadius: '50%',
+													display: 'inline-block',
+													margin: '0 5px 0 10px'
+												}}
+											/>{' '}
+											{selectedHero.base_agi} + {selectedHero.agi_gain}
+										</Typography>
+										<Typography>
+											{' '}
+											<span
+												style={{
+													content: '""',
+													width: '10px',
+													height: '10px',
+													backgroundColor: 'aqua',
+													borderRadius: '50%',
+													display: 'inline-block',
+													margin: '0 5px 0 10px'
+												}}
+											/>{' '}
+											{selectedHero.base_int} + {selectedHero.int_gain}
+										</Typography>
+									</Box>
+								</Box>
+							</Box>
+							<Box sx={{ display: 'flex', padding: '0 1rem' }}>
+								<Box sx={{ width: '10rem', paddingRight: '0.5rem', borderRight: '1px solid grey' }}>
+									<Typography>ATTACK</Typography>
+									<TextInfo
+										label='Damage:'
+										description={`${selectedHero.base_attack_min + selectedHero.base_agi} -
+										${selectedHero.base_attack_max + selectedHero.base_agi}`}
+									/>
+									<TextInfo
+										label='Attack Speed:'
+										description={`${selectedHero.base_attack_time + selectedHero.base_agi}`}
+									/>
+									<TextInfo
+										label='Attack Range:'
+										description={`${selectedHero.base_attack_time + selectedHero.base_agi}`}
+									/>
+									<TextInfo label='Move Speed:' description={`${selectedHero.move_speed}`} />
+									<TextInfo label='Spell Amp:' description={`${selectedHero.base_mr}`} />
+									<TextInfo label='Mana Regen:' description={`${selectedHero.base_mana_regen}`} />
+								</Box>
+								<Box sx={{ width: '10rem', paddingLeft: '0.5rem' }}>
+									<Typography>DEFENSE</Typography>
+									<TextInfo label='Armor:' description={`${selectedHero.base_armor}`} />
+									<TextInfo label='Physical Resist:' description={`${selectedHero.base_mr}`} />
+									<TextInfo label='Magic Resist:' description={`${selectedHero.base_mr}%`} />{' '}
+									<TextInfo label='Status Resist:' description='0%' />
+									<TextInfo label='Evasion:' description='0%' />
+									<TextInfo
+										label='Health Regen:'
+										description={`${selectedHero.base_health_regen}`}
+									/>
+								</Box>
+							</Box>
+						</Box>
+					)}
+
+					{heroData.map((item: DotaHeroLastMatch) => (
+						<Box
+							key={item.match_id}
+							sx={{
+								width: '30%',
+								flexGrow: 1,
+								color: 'white',
+								textDecoration: 'none',
+								margin: '0 2rem 1rem'
+							}}
+						>
+							<StatisticItem item={item} />
+						</Box>
+					))}
+				</Box>
+			</Box>
+		</>
+	);
 };
 
 export default Layout;

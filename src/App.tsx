@@ -11,7 +11,7 @@ const App: React.FC = () => {
 				<Route path={RoutesLink.dashboard} element={<Dashboard />} />
 				<Route path={RoutesLink.chess} element={<Chess />} />
 				<Route path={RoutesLink.dota} element={<Dota />} />
-				<Route path={`${RoutesLink.dotaHero}/:id/:name`} element={<DotaHero />} />
+				<Route path={`${RoutesLink.dotaHero}/:id`} element={<DotaHero />} />
 			</Routes>
 		</BrowserRouter>
 	);

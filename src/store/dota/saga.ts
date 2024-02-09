@@ -1,5 +1,10 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { saveDotaFailure, saveHeroesSuccess, startLoading, saveHeroSuccess } from './reducer';
+import {
+	saveDotaFailure,
+	saveHeroesSuccess,
+	startLoading,
+	saveDotaHeroMatchesSuccess
+} from './reducer';
 import { call, debounce, put } from 'redux-saga/effects';
 import apiService from '../../apiServices/requests';
 import { DotaTypes } from './types';
@@ -24,7 +29,7 @@ export function* getHeroLastMatches(actions: PayloadAction<number>) {
 	const { data } = yield call(apiService.getHeroLastMatches, payload);
 
 	if (data.length) {
-		yield put(saveHeroSuccess(data));
+		yield put(saveDotaHeroMatchesSuccess(data));
 	} else {
 		saveDotaFailure();
 	}

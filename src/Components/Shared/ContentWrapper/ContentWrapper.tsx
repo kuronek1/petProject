@@ -17,9 +17,9 @@ const ContentWrapper: React.FC<IProps> = (props): JSX.Element => {
 			sx={{
 				display: 'flex',
 				bgcolor: 'black',
-				color: 'aqua',
+				color: 'white',
 				minHeight: '100vh',
-				minWidth: '100rem'
+				minWidth: '100%'
 			}}
 		>
 			<Box
@@ -84,7 +84,7 @@ const ContentWrapper: React.FC<IProps> = (props): JSX.Element => {
 						padding: '2rem',
 						height: '100%',
 						width: '100%',
-						maxHeight: '95vh'
+						flexGrow: 1
 					}}
 				>
 					{children}
